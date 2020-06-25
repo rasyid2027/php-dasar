@@ -1,10 +1,66 @@
 <?php
+session_start();
 require 'functions2.php';
 
+if( isset($_COOKIE['id']) && isset($_COOKIE['key']) ) {
+    $id = $_COOKIE['id'];
+    $key = $_COOKIE['key'];
+
+    //ambil username berdasarkan id
+    $result = mysqli_query($conn, "SELECT username FROM moba WHERE id = $id");
+
+    $row = mysqli_fetch_assoc($result);
+
+    //cek username dan cookie
+    if( $key === hash('sha256', $row['username']) ) {
+        $_SESSION['login'] = true;
+    }
+}
+
+if( isset($_SESSION["login"]) ) {
+    header("Location: moba.php");
+    exit;
+}
+
+
+if( isset($_POST["login"]) ) {
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+
+    $result = mysqli_query($conn, "SELECT * FROM moba WHERE username = '$username'");
+
+    //cek username
+    if( mysqli_num_rows($result) === 1 ) {
+        
+        //cek password
+        $row = mysqli_fetch_assoc($result);
+        if( password_verify($password, $row["password"]) ) {
+            //set session
+            $_SESSION["login"] = true;
+
+            //cek remember
+            if( isset($_POST['remember']) ) {
+                //buat cookie
+                setcookie( 'id', $row['id'], time()+180 );
+                setcookie( 'key', hash('sha256', $row['username']), time()+180 );
+            }
+
+            header("Location: moba.php");
+            exit;
+        }
+    } else {
+        echo "
+                <script>
+                    alert('Username / Password salah!')
+                </script>
+            ";
+    }
+}
+
 if( isset($_POST["registrasi"]) ) {
-    var_dump($_POST);
+    // var_dump($_POST);
     
-    if( registarsi($_POST) > 0 ) {
+    if( registrasi($_POST) > 0 ) {
         echo "
                 <script>
                     alert('User baru berhasil ditambahkan!')
@@ -23,7 +79,7 @@ if( isset($_POST["registrasi"]) ) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoBa</title>
-    <link rel="stylesheet" href="new1.css">
+    <link rel="stylesheet" href="RegLog.css">
 </head>
 <body>
     <div class="topbar"></div>
@@ -33,13 +89,20 @@ if( isset($_POST["registrasi"]) ) {
             <form action="" method="post" class="login">
                 <table>
                     <tr class="caption">
-                        <td><label for="usernameLogin">Username</label></td>
-                        <td><label for="passwordLogin">Password</label></td>
+                        <td><label for="username">Username</label></td>
+                        <td><label for="password">Password</label></td>
                     </tr>
                     <tr class="textbox">
-                        <td><input type="text" name="usernameLogin" id="usernameLogin"></td>
-                        <td><input type="password" name="passwordLogin" id="passwordLogin"></td>
+                        <td><input type="text" name="username" id="username"></td>
+                        <td><input type="password" name="password" id="password"></td>
                         <td><button type="submit" name="login">masshook!!</button></td>
+                    </tr>
+                    <tr class="remember">
+                        <td></td>
+                        <td>
+                            <input type="checkbox" name="remember" id="remember">
+                            <label for="remember">Remember me</label>
+                        </td>
                     </tr>
                 </table>
             </form>
@@ -126,6 +189,6 @@ if( isset($_POST["registrasi"]) ) {
             <div class="copy">&copy; Copyright 2020. halimurrasyid.</div>
         </div>
     </div>
-    <div class="bot-bar"></div> 
+    <div class="bot-bar"></div>
 </body>
 </html>

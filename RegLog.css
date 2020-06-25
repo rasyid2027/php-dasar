@@ -60,7 +60,7 @@ body {
     top: 0;
     right: 0;
     left: 0;
-    height: 100px;
+    height: 110px;
     background-color: #8d3535;
     z-index: -9999;
 }
@@ -115,6 +115,10 @@ body {
     background-color: #1ca132;
 }
 
+.remember label {
+    font-size: 12px;
+}
+
 /* main */
 
 .main {
@@ -137,6 +141,7 @@ body {
     background-repeat: no-repeat;
 }
 
+
 /* sidebar */
 
 .sidebar {
@@ -151,6 +156,10 @@ body {
 
 .sidebar h2 {
     font-size: 28px;
+}
+
+.sidebar table tr td input {
+    padding-left: 50px;
 }
 
 .sidebar input[type=text] {
@@ -239,7 +248,7 @@ hr {
 
 .bot-bar {
     position: absolute;
-    bottom: -650px;
+    bottom: -600px;
     right: 0;
     left: 0;  
     height: 500px;  

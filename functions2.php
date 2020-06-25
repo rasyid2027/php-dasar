@@ -35,7 +35,7 @@
         $password = password_hash($password, PASSWORD_DEFAULT);
         
         //masukan data user baru ke database
-        $query = "INSERT INTO user_moba VALUES(NULL, '$namaDepan', '$namaBelakang', '$username', '$email', '$password')";
+        $query = "INSERT INTO moba VALUES(NULL, '$namaDepan', '$namaBelakang', '$username', '$email', '$password')";
         mysqli_query($conn, $query);
 
         return mysqli_affected_rows($conn);

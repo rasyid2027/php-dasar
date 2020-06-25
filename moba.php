@@ -1,10 +1,21 @@
+<?php
+
+session_start();
+
+if( !isset($_SESSION["login"]) ) {
+    header("Location: RegLog.php");
+    exit;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moba</title>
-    <link rel="stylesheet" href="new.css">
+    <link rel="stylesheet" href="moba.css">
 </head>
 <body>
     <div class="top-bar">
@@ -14,6 +25,7 @@
             <li><a href="#">Product</a></li>
             <li><a href="#">Services</a></li>
             <li><a href="#">Contact</a></li>
+            <li style="font-style: italic;"><a href="logoutNew.php">Logout</a></li>
         </ul>
     </div>
     <div class="container">
